@@ -1,0 +1,201 @@
+---
+// src/components/GeometricAnimation.astro
+---
+<canvas id="geo-canvas" class="absolute top-0 right-0 w-full h-full block touch-none opacity-60 mix-blend-multiply pointer-events-none"></canvas>
+
+<script>
+  // Define the interface for particles to ensure type safety
+  interface Particle {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    size: number;
+    baseX: number;
+    baseY: number;
+    update(mouseX: number, mouseY: number): void;
+    draw(): void;
+  }
+
+  const initCanvas = () => {
+    // Locate the canvas element in the DOM
+    const canvas = document.getElementById('geo-canvas') as HTMLCanvasElement | null;
+    
+    // Safety check: Exit if canvas or 2D context is unavailable
+    if (!canvas) return; 
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = 0;
+    let height = 0;
+    let particles: Particle[] = [];
+    let mouseX = -1000;
+    let mouseY = -1000;
+    
+    // --- VISUAL CONFIGURATION ---
+    const strokeColorRGB = '24, 24, 27'; 
+    const particleCount = 90;      
+    const connectionDistance = 160; 
+    const baseSpeed = 0.2; 
+    const mouseRadius = 200; // Radius of cursor influence
+    
+    // --- HELPER FUNCTIONS ---
+
+    const resize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      // Use parent container dimensions if canvas is 0 (can happen on fast re-renders)
+      width = rect.width || window.innerWidth;
+      height = rect.height || window.innerHeight;
+      
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      
+      ctx.scale(dpr, dpr);
+    };
+
+    // Track mouse position
+    window.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
+    });
+
+    // Class representing a single node in the geometric network
+    class ParticleNode implements Particle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+      baseX: number; // Store original position references if needed for returning, 
+                     // but here we drift, so we just use current x/y
+      baseY: number;
+
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * baseSpeed; 
+        this.vy = (Math.random() - 0.5) * baseSpeed;
+        this.size = Math.random() * 2.5 + 0.5; 
+        this.baseX = this.x;
+        this.baseY = this.y;
+      }
+
+      update(mX: number, mY: number): void {
+        // 1. Regular Movement
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // 2. Mouse Interaction (Repel/Shift)
+        const dx = mX - this.x;
+        const dy = mY - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < mouseRadius) {
+            // Calculate vector away from mouse
+            const forceDirectionX = dx / distance;
+            const forceDirectionY = dy / distance;
+            
+            // The closer, the stronger the push
+            const force = (mouseRadius - distance) / mouseRadius;
+            const directionX = forceDirectionX * force * 1.5; // Strength multiplier
+            const directionY = forceDirectionY * force * 1.5;
+
+            this.x -= directionX;
+            this.y -= directionY;
+        }
+
+        // 3. Screen Wrap / Bounce
+        if (this.x < 0 || this.x > width) this.vx *= -1;
+        if (this.y < 0 || this.y > height) this.vy *= -1;
+      }
+
+      draw(): void {
+        if (!ctx) return;
+        ctx.fillStyle = `rgba(${strokeColorRGB}, 0.6)`; 
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    const initParticles = () => {
+      particles = [];
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new ParticleNode());
+      }
+    };
+
+    const animate = () => {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw Cursor Halo (very subtle)
+      if (mouseX > 0 && mouseY > 0) {
+          const gradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 300);
+          gradient.addColorStop(0, `rgba(${strokeColorRGB}, 0.04)`);
+          gradient.addColorStop(1, `rgba(${strokeColorRGB}, 0)`);
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(mouseX, mouseY, 300, 0, Math.PI * 2);
+          ctx.fill();
+      }
+
+      // Update and draw particles
+      particles.forEach(p => {
+        p.update(mouseX, mouseY);
+        p.draw();
+      });
+
+      // Draw Lines
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < connectionDistance) {
+            // Opacity based on distance
+            let opacity = (1 - (distance / connectionDistance)) * 0.15;
+            
+            // Intensify if near mouse
+            const mouseDx = mouseX - particles[i].x;
+            const mouseDy = mouseY - particles[i].y;
+            const mouseDist = Math.sqrt(mouseDx*mouseDx + mouseDy*mouseDy);
+            
+            if (mouseDist < 200) {
+                opacity += 0.15 * (1 - mouseDist/200); // Add up to 0.15 extra opacity
+            }
+
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(${strokeColorRGB}, ${Math.min(opacity, 0.4)})`; 
+            ctx.lineWidth = 1.2;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(animate);
+    };
+
+    // --- INITIALIZATION ---
+    resize();
+    initParticles();
+    animate();
+
+    const observer = new ResizeObserver(() => {
+        resize();
+        initParticles(); 
+    });
+    observer.observe(canvas);
+  };
+
+  if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCanvas);
+  } else {
+      initCanvas();
+  }
+</script>

@@ -1,0 +1,56 @@
+---
+title: "Brigette Real Estate"
+client: "Brigette"
+publishDate: 2025-12-14
+cover: "/assets/brigette-cover.jpg" 
+coverAlt: "Brigette Real Estate Property Dashboard"
+accentColor: "#2C3E50"
+role: "Full Stack Engineer"
+engagement: "Contract"
+team: "Solo"
+nda: false
+stack:
+  frontend: ["WordPress", "PHP", "JavaScript"]
+  backend: ["Python", "REAXML", "MySQL", "AWS (Linux)"]
+tags: ["Real Estate", "Data Engineering", "Backend"]
+responsibilities:
+  - "ETL Pipeline Architecture"
+  - "Database Design"
+  - "Frontend Development"
+results:
+  - "Automated daily data sync from legacy CRM"
+  - "Custom brand interface decoupled from restrictive platform"
+  - "Zero-maintenance data pipeline"
+liveUrl: "https://birgette.co.au"
+isFeatured: true
+---
+
+## Overview
+Brigette Real Estate needed to break away from the generic, template-based websites provided by their CRM (**AgentBox**), which lacked brand identity. They wanted a bespoke digital presence but were limited by how data was exported.
+
+## Challenge
+We received about 10 massive bulk files daily via FTP. The engineering challenge wasn't just parsing XML; it was **Data Integrity**. Records had to be processed in strict chronological order to correctly distinguish between new listings and updates to existing ones, ensuring no stale data overwrote the latest information.
+
+## Constraints
+- **Legacy Feed**: Data provided only via bulk XML dumps (REAXML).
+- **Timing**: Updates had to be processed within minutes of receipt.
+- **Budget**: Solution needed to be serverless or low-cost maintenance.
+
+## Solution
+I architected a robust backend solution on **AWS (Linux)** to bridge the gap between their CRM and their custom brand:
+
+1.  **Chronological Stream Processing:** A custom Python script ingests the daily XML dumps, sorting them by timestamp to strictly respect the sequence of events.
+2.  **Smart Upsert Logic:** The system evaluates every record—inserting new listings or carefully updating specific fields in existing ones only when valid changes occur.
+3.  **Brand Independence:** By centralizing this data in our own SQL database, we detached the frontend from the CRM's limitations, allowing for a fully custom, high-end user interface.
+
+## Highlights
+- Decoupled frontend from legacy CRM constraints.
+- Robust error handling for malformed XML feeds.
+
+## Results
+- Enabled the agency to own their brand identity.
+- Reliable data bridge processing thousands of records daily.
+
+## Next improvements
+- Migration to a serverless architecture (AWS Lambda) for better scalability.
+- Implementation of real-time webhooks if the CRM supports them in future.

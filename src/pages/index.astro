@@ -1,10 +1,291 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import GeometricAnimation from "../components/common/GeometricAnimation.astro";
+import WorkCard from "../components/WorkCard.astro";
+import { getCollection } from "astro:content";
+
+// Fetch and sort work entries
+const allWork = await getCollection("work");
+const featuredWork = allWork
+  .filter((project) => project.data.isFeatured)
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
+  .slice(0, 3);
 ---
 
-<Layout title="Juan M. Rodriguez | Developer">
-	<main class="flex flex-col items-center justify-center h-screen">
-		<h1 class="lg:text-4xl sm:text-sm  md:text-2xl mr-4 ml-4 pd-4 font-bold">🔨Under construction🔨</h1>
-		<h2 class="lg:text-lg sm:text-sm md:text-base mr-4 ml-4 pd-4 text-center"> I'm currently working on this website. Please check back later.😁 </h2>
-	</main>
+<Layout title="Juan M. Rodriguez | Senior Contract Developer">
+  <!-- Geometric Background Layer -->
+  <div class="fixed inset-0 z-0 pointer-events-none">
+     <GeometricAnimation />
+  </div>
+
+  <!-- 1. HERO SECTION -->
+  <section id="hero" class="relative w-full min-h-screen flex items-center px-6 md:px-12 pt-20 overflow-hidden">
+    <div class="relative z-10 max-w-5xl">
+      
+      <!-- Availability Pill -->
+      <div class="overflow-hidden mb-8">
+        <span class="availability-pill inline-flex items-center gap-2 py-1 px-3 border border-zinc-200 rounded-full bg-white/80 backdrop-blur-sm text-xs font-sans font-medium text-zinc-600 tracking-wide opacity-0 translate-y-4">
+          <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+          Booking Q1 2026 projects
+        </span>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.9] tracking-tighter text-[#111111] mb-8">
+        <div class="overflow-hidden"><span class="reveal-text block">ADVICE, DESIGN,</span></div>
+        <div class="overflow-hidden"><span class="reveal-text block">DELIVERY.</span></div>
+        <div class="overflow-hidden"><span class="reveal-text block text-zinc-400">FROM ADELAIDE.</span></div>
+      </h1>
+
+      <!-- Subheadline -->
+      <div class="overflow-hidden mb-10">
+        <p class="hero-sub max-w-xl text-lg md:text-xl text-zinc-600 leading-relaxed opacity-0 translate-y-4">
+          White label contract developer for agencies and product teams. 
+          <span class="text-zinc-900 font-medium">Premium front end, GSAP motion, clean handoffs.</span>
+        </p>
+      </div>
+
+      <!-- CTAs -->
+      <div class="hero-cta flex flex-wrap gap-4 opacity-0 translate-y-4">
+        <a href="mailto:juan@juanmrodriguez.dev?subject=Availability%20check%20%7C%20Project%20%7C%20Timeline&body=Hi%20Juan%2C%0AWe%20need%20help%20with%3A%20%5Bone%20line%5D%0ATimeline%3A%20%5Bdate%20or%20week%5D%0ABest%20contact%3A%20%5Bemail%20or%20phone%5D" 
+           class="px-8 py-3 bg-zinc-900 text-white font-sans font-medium rounded-sm hover:bg-zinc-800 transition-all hover:scale-105 active:scale-95">
+          Request availability
+        </a>
+        <a href="#selected-work" 
+           class="px-8 py-3 border border-zinc-200 bg-white/50 backdrop-blur-sm text-zinc-900 font-sans font-medium rounded-sm hover:bg-white hover:border-zinc-300 transition-all">
+          See selected work
+        </a>
+      </div>
+      
+    </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-10 left-6 md:left-12 animate-bounce opacity-50">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-zinc-400">
+        <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 2. SELECTED WORK -->
+  <section id="selected-work" class="relative py-24 px-6 md:px-12 border-t border-zinc-100 bg-white/80 backdrop-blur-sm z-10">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="section-title font-display text-4xl md:text-5xl font-bold mb-16 opacity-0 translate-y-8">Selected Work</h2>
+      
+      <div class="grid grid-cols-1 gap-16 md:gap-24">
+        {featuredWork.map((project) => (
+          <div class="work-card-wrapper opacity-0 translate-y-12">
+            <WorkCard project={project} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. CAPABILITIES -->
+  <section id="capabilities" class="relative py-24 px-6 md:px-12 border-t border-zinc-100 z-10">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="section-title font-display text-4xl md:text-5xl font-bold mb-16 opacity-0 translate-y-8">Capabilities</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+        {[
+          "Marketing sites and landing pages",
+          "Web apps and dashboards",
+          "Motion and interaction (GSAP)",
+          "Integrations and automations",
+          "Performance and technical SEO",
+          "White label delivery and handoff"
+        ].map((capability, index) => (
+          <div class="capability-item border-t border-zinc-200 pt-6 opacity-0 translate-y-8">
+            <span class="text-xs text-zinc-400 mb-2 block font-mono">0{index + 1}</span>
+            <p class="text-xl md:text-2xl font-display font-medium text-zinc-800">{capability}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. PROCESS (How I plug in) -->
+  <section id="process" class="relative py-24 px-6 md:px-12 border-t border-zinc-100 bg-zinc-50 z-10">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="section-title font-display text-4xl md:text-5xl font-bold mb-16 opacity-0 translate-y-8">How I plug into your team</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {[
+          { title: "Fast ramp up", desc: "Immediate impact with minimal onboarding." },
+          { title: "PR friendly workflow", desc: "Git, Jira, and clean code reviews." },
+          { title: "Clean delivery", desc: "Component-based architecture & docs." },
+          { title: "NDA ready", desc: "Discreet and confidential handling." }
+        ].map((step) => (
+          <div class="process-step bg-white p-8 border border-zinc-200/50 shadow-sm opacity-0 translate-y-8">
+            <h3 class="font-display text-xl font-bold mb-3">{step.title}</h3>
+            <p class="text-zinc-600">{step.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. ENGAGEMENT MODELS -->
+  <section id="engagement" class="relative py-24 px-6 md:px-12 border-t border-zinc-100 z-10">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="section-title font-display text-4xl md:text-5xl font-bold mb-16 opacity-0 translate-y-8">Engagement Models</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="engagement-card p-8 border border-zinc-200 bg-white opacity-0 translate-y-8">
+            <h3 class="font-display text-2xl font-bold mb-2">Hourly</h3>
+            <div class="text-3xl font-sans font-medium mb-4 text-zinc-900">$35 <span class="text-base text-zinc-500 font-normal">AUD / hr</span></div>
+            <p class="text-zinc-600 text-sm">Flexible support for ad-hoc tasks and overflow.</p>
+        </div>
+        <div class="engagement-card p-8 border border-zinc-900 bg-zinc-900 text-white opacity-0 translate-y-8 scale-105 shadow-xl">
+            <h3 class="font-display text-2xl font-bold mb-2">Fixed Scope</h3>
+            <div class="text-3xl font-sans font-medium mb-4">Project Based</div>
+            <p class="text-zinc-400 text-sm">Clear deliverables and timeline. Best for full sites.</p>
+        </div>
+        <div class="engagement-card p-8 border border-zinc-200 bg-white opacity-0 translate-y-8">
+            <h3 class="font-display text-2xl font-bold mb-2">Sprint Support</h3>
+            <div class="text-3xl font-sans font-medium mb-4 text-zinc-900">1-2 Weeks</div>
+            <p class="text-zinc-600 text-sm">Dedicated overflow capacity for crunch time.</p>
+        </div>
+      </div>
+      <p class="mt-8 text-center text-zinc-400 text-sm">Remote friendly • Adelaide Timezone (ACST)</p>
+    </div>
+  </section>
+
+  <!-- 6. ABOUT & CONTACT -->
+  <section id="contact" class="relative py-24 px-6 md:px-12 border-t border-zinc-100 bg-white z-10">
+    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
+      
+      <!-- About (Compact) -->
+      <div class="opacity-0 translate-y-8 about-block">
+        <h2 class="font-display text-3xl font-bold mb-6">Built for delivery.</h2>
+        <div class="prose prose-zinc text-zinc-600">
+          <p class="mb-4">
+            I'm Juan, a Senior Frontend Engineer focused on shipping. I bridge the gap between design and engineering, helping agencies execute high-fidelity creative work without the technical debt.
+          </p>
+          <p>
+            Specialising in <strong class="text-zinc-900">Astro</strong>, <strong class="text-zinc-900">React</strong>, and <strong class="text-zinc-900">GSAP</strong>, but flexible enough to jump into any legacy stack (WordPress, PHP, Shopify).
+          </p>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="opacity-0 translate-y-8 contact-block">
+        <h2 class="font-display text-3xl font-bold mb-6">Check availability</h2>
+        <form class="flex flex-col gap-4" onsubmit="event.preventDefault(); window.location.href='mailto:juan@juanmrodriguez.dev?subject=New%20Inquiry&body='+encodeURIComponent(this.message.value)">
+          <input type="text" name="name" placeholder="Name" class="w-full p-4 bg-zinc-50 border border-zinc-200 focus:border-zinc-900 focus:outline-none transition-colors" required />
+          <input type="email" name="email" placeholder="Email" class="w-full p-4 bg-zinc-50 border border-zinc-200 focus:border-zinc-900 focus:outline-none transition-colors" required />
+          <textarea name="message" rows="4" placeholder="Brief details about the project..." class="w-full p-4 bg-zinc-50 border border-zinc-200 focus:border-zinc-900 focus:outline-none transition-colors" required></textarea>
+          
+          <button type="submit" class="w-full py-4 bg-zinc-900 text-white font-bold hover:bg-zinc-800 transition-colors">
+            Request Availability
+          </button>
+        </form>
+        <div class="mt-4 flex justify-between items-center text-xs text-zinc-500">
+            <span>Reply within 24h</span>
+            <a href="#" class="underline hover:text-zinc-900">Optional brief template</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-12 px-6 md:px-12 border-t border-zinc-100 bg-white z-10 relative">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="text-zinc-900 font-display font-bold text-xl">Juan M. Rodriguez</div>
+      <div class="flex gap-6 text-sm text-zinc-500">
+        <a href="#" class="hover:text-zinc-900 transition-colors">LinkedIn</a>
+        <a href="#" class="hover:text-zinc-900 transition-colors">GitHub</a>
+        <a href="mailto:juan@juanmrodriguez.dev" class="hover:text-zinc-900 transition-colors">Email</a>
+      </div>
+      <div class="text-xs text-zinc-400">Adelaide, AU • Built for delivery.</div>
+    </div>
+  </footer>
+
 </Layout>
+
+<script>
+  import gsap from "gsap";
+  import ScrollTrigger from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // 1. HERO ANIMATION TIMELINE
+  const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+  // Initial delay to ensure page is rendered
+  heroTl.to(".availability-pill", { 
+    y: 0, 
+    opacity: 1, 
+    duration: 0.8 
+  }, "+=0.2")
+  .to(".reveal-text", {
+    y: 0,
+    opacity: 1,
+    duration: 1,
+    stagger: 0.15,
+    ease: "power4.out"
+  }, "-=0.4")
+  .to(".hero-sub", {
+    y: 0,
+    opacity: 1,
+    duration: 0.8
+  }, "-=0.6")
+  .to(".hero-cta", {
+    y: 0,
+    opacity: 1,
+    duration: 0.8
+  }, "-=0.6");
+
+  // 2. SCROLL TRIGGERS FOR SECTIONS
+  
+  // Generic fade up helper
+  const fadeUp = (selector: string, trigger?: string, stagger: number = 0) => {
+    // Force set initial state in case CSS didn't catch it
+    gsap.set(selector, { y: 32, opacity: 0 }); 
+
+    gsap.to(selector, {
+      y: 0,
+      opacity: 1,
+      duration: 0.8,
+      stagger: stagger,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: trigger || selector,
+        start: "top 85%",
+        toggleActions: "play none none reverse"
+      }
+    });
+  };
+
+  // Section Titles
+  gsap.utils.toArray('.section-title').forEach((title: any) => {
+    fadeUp(title);
+  });
+
+  // Selected Work
+  fadeUp(".work-card-wrapper", "#selected-work", 0.2);
+
+  // Capabilities
+  fadeUp(".capability-item", "#capabilities", 0.1);
+
+  // Process Steps
+  fadeUp(".process-step", "#process", 0.15);
+
+  // Engagement Cards
+  fadeUp(".engagement-card", "#engagement", 0.2);
+
+  // About & Contact
+  fadeUp(".about-block", "#contact");
+  fadeUp(".contact-block", "#contact", 0.2);
+
+</script>
+
+<style>
+  /* Ensure initial states for GSAP */
+  .reveal-text {
+    transform: translateY(110%);
+    opacity: 0;
+  }
+</style>
