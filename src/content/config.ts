@@ -11,6 +11,7 @@ const workCollection = defineCollection({
 		// 2. Visual Assets & Theming
 		cover: z.string(),
 		coverAlt: z.string(),
+		heroVideo: z.string().optional(),
 		accentColor: z.string().optional(), // Made optional as per some strategy docs implying it might not be strictly required everywhere, but good to have.
 
 		// 3. Role & Engagement Details

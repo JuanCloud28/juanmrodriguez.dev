@@ -24,7 +24,7 @@ try {
     throw e;
 }
 
-const { title, client, publishDate, cover, coverAlt, role, engagement, team, stack, liveUrl, tags } = entry.data;
+const { title, client, publishDate, cover, coverAlt, role, engagement, team, stack, liveUrl, tags, heroVideo } = entry.data;
 
 const formattedDate = publishDate ? publishDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : 'Date Unknown';
 const year = formattedDate.split(' ')[1] || formattedDate;
@@ -74,9 +74,21 @@ const year = formattedDate.split(' ')[1] || formattedDate;
       </div>
     </header>
 
-    <!-- Cover Image -->
+    <!-- Cover Image / Video -->
     <div class="w-full h-[50vh] md:h-[70vh] overflow-hidden bg-zinc-100">
-        <img src={cover} alt={coverAlt} class="w-full h-full object-cover" />
+        {heroVideo ? (
+            <video
+                src={heroVideo}
+                poster={cover}
+                autoplay
+                loop
+                muted
+                playsinline
+                class="w-full h-full object-cover"
+            />
+        ) : (
+            <img src={cover} alt={coverAlt} class="w-full h-full object-cover" />
+        )}
     </div>
 
     <!-- Content Grid -->
