@@ -24,10 +24,10 @@ const featuredWork = allWork
       
       <!-- Availability Pill -->
       <div class="overflow-hidden mb-8">
-        <span class="availability-pill inline-flex items-center gap-2 py-1 px-3 border border-zinc-200 rounded-full bg-white/80 backdrop-blur-sm text-xs font-sans font-medium text-zinc-600 tracking-wide opacity-0 translate-y-4">
+        <a href="#contact" class="availability-pill inline-flex items-center gap-2 py-1 px-3 border border-zinc-200 rounded-full bg-white/80 backdrop-blur-sm text-xs font-sans font-medium text-zinc-600 tracking-wide opacity-0 translate-y-4 cursor-pointer hover:border-zinc-300 transition-colors">
           <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
           Booking Q1 2026 projects
-        </span>
+        </a>
       </div>
 
       <!-- Headline -->
@@ -47,8 +47,8 @@ const featuredWork = allWork
 
       <!-- CTAs -->
       <div class="hero-cta flex flex-wrap gap-4 opacity-0 translate-y-4">
-        <a href="mailto:juan@juanmrodriguez.dev?subject=Availability%20check%20%7C%20Project%20%7C%20Timeline&body=Hi%20Juan%2C%0AWe%20need%20help%20with%3A%20%5Bone%20line%5D%0ATimeline%3A%20%5Bdate%20or%20week%5D%0ABest%20contact%3A%20%5Bemail%20or%20phone%5D" 
-           class="px-8 py-3 bg-zinc-900 text-white font-sans font-medium rounded-sm hover:bg-zinc-800 transition-all hover:scale-105 active:scale-95">
+        <a href="#contact" 
+           class="px-8 py-3 bg-zinc-900 text-white font-sans font-medium rounded-sm hover:bg-zinc-800 transition-all hover:scale-105 active:scale-95 cursor-pointer">
           Request availability
         </a>
         <a href="#selected-work" 
@@ -172,18 +172,20 @@ const featuredWork = allWork
       <!-- Contact Form -->
       <div class="opacity-0 translate-y-8 contact-block">
         <h2 class="font-display text-3xl font-bold mb-6">Check availability</h2>
-        <form class="flex flex-col gap-4" onsubmit="event.preventDefault(); window.location.href='mailto:juan@juanmrodriguez.dev?subject=New%20Inquiry&body='+encodeURIComponent(this.message.value)">
+        <form id="contact-form" class="flex flex-col gap-4">
           <input type="text" name="name" placeholder="Name" class="w-full p-4 bg-zinc-50 border border-zinc-200 focus:border-zinc-900 focus:outline-none transition-colors" required />
           <input type="email" name="email" placeholder="Email" class="w-full p-4 bg-zinc-50 border border-zinc-200 focus:border-zinc-900 focus:outline-none transition-colors" required />
           <textarea name="message" rows="4" placeholder="Brief details about the project..." class="w-full p-4 bg-zinc-50 border border-zinc-200 focus:border-zinc-900 focus:outline-none transition-colors" required></textarea>
+          <!-- Honeypot -->
+          <input type="text" name="company" class="hidden" tabindex="-1" autocomplete="off" />
           
-          <button type="submit" class="w-full py-4 bg-zinc-900 text-white font-bold hover:bg-zinc-800 transition-colors">
+          <button type="submit" class="w-full py-4 bg-zinc-900 text-white font-bold hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
             Request Availability
           </button>
+          <div id="form-status" class="hidden p-4 text-center text-sm rounded"></div>
         </form>
         <div class="mt-4 flex justify-between items-center text-xs text-zinc-500">
-            <span>Reply within 24h</span>
-            <a href="#" class="underline hover:text-zinc-900">Optional brief template</a>
+            <span>Reply within 24h</span>            
         </div>
       </div>
 
@@ -197,7 +199,7 @@ const featuredWork = allWork
       <div class="flex gap-6 text-sm text-zinc-500">
         <a href="#" class="hover:text-zinc-900 transition-colors">LinkedIn</a>
         <a href="#" class="hover:text-zinc-900 transition-colors">GitHub</a>
-        <a href="mailto:juan@juanmrodriguez.dev" class="hover:text-zinc-900 transition-colors">Email</a>
+        <a href="mailto:contact@juanmrodriguez.dev" class="hover:text-zinc-900 transition-colors">Email</a>
       </div>
       <div class="text-xs text-zinc-400">Adelaide, AU • Built for delivery.</div>
     </div>
@@ -280,6 +282,61 @@ const featuredWork = allWork
   fadeUp(".about-block", "#contact");
   fadeUp(".contact-block", "#contact", 0.2);
 
+  // 3. CONTACT FORM HANDLING
+  const form = document.getElementById("contact-form") as HTMLFormElement;
+  const statusDiv = document.getElementById("form-status");
+  const submitButton = form?.querySelector("button[type='submit']") as HTMLButtonElement;
+
+  if (form && statusDiv && submitButton) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      // Clear previous status
+      statusDiv.classList.add("hidden");
+      statusDiv.classList.remove("bg-green-100", "text-green-800", "bg-red-100", "text-red-800");
+      
+      // Set loading state
+      const originalBtnText = submitButton.innerText;
+      submitButton.innerText = "Sending...";
+      submitButton.disabled = true;
+
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData);
+
+      try {
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.ok) {
+            // Success
+            form.reset();
+            statusDiv.textContent = "Message sent! I'll be in touch within 24 hours.";
+            statusDiv.classList.remove("hidden");
+            statusDiv.classList.add("bg-green-100", "text-green-800");
+        } else {
+            // Server error
+            throw new Error(result.error || "Failed to send message");
+        }
+      } catch (error) {
+        // Network or other error
+        statusDiv.textContent = "Something went wrong. Please try again or email me directly at contact@juanmrodriguez.dev.";
+        statusDiv.classList.remove("hidden");
+        statusDiv.classList.add("bg-red-100", "text-red-800");
+        console.error("Form submission error:", error);
+      } finally {
+        // Reset button state
+        submitButton.innerText = originalBtnText;
+        submitButton.disabled = false;
+      }
+    });
+  }
 </script>
 
 <style>
