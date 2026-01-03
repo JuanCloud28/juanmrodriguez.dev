@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import WorkCard from '../../components/WorkCard.astro';
 
 export async function getStaticPaths() {
   const workEntries = await getCollection('work');
@@ -10,6 +11,13 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
+
+// Fetch other projects for the "More Selected Work" section
+const allWork = await getCollection('work');
+const nextProjects = allWork
+  .filter(p => p.slug !== entry.slug && p.data.isFeatured)
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
+  .slice(0, 2);
 
 if (!entry) {
     throw new Error('Entry not found in props');
@@ -146,9 +154,21 @@ const year = formattedDate.split(' ')[1] || formattedDate;
 
     </div>
     
+    <!-- More Selected Work -->
+    {nextProjects.length > 0 && (
+      <section class="max-w-7xl mx-auto px-6 md:px-12 py-20 border-t border-zinc-100">
+        <h2 class="font-display text-2xl font-bold text-zinc-900 mb-12">More Selected Work</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            {nextProjects.map(project => (
+                <WorkCard project={project} />
+            ))}
+        </div>
+      </section>
+    )}
+
     <!-- Footer Navigation (Simple Back) -->
     <div class="border-t border-zinc-100 py-12 px-6 md:px-12 text-center">
-        <a href="/#selected-work" class="text-zinc-500 hover:text-zinc-900 transition-colors text-sm font-medium">← Back to Selected Work</a>
+        <a href="/" class="text-zinc-500 hover:text-zinc-900 transition-colors text-sm font-medium">← Back to Home</a>
     </div>
 
   </article>
