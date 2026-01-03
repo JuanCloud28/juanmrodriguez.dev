@@ -10,6 +10,7 @@ const workCollection = defineCollection({
 
 		// 2. Visual Assets & Theming
 		cover: z.string(),
+		coverMobile: z.string().optional(),
 		coverAlt: z.string(),
 		heroVideo: z.string().optional(),
 		accentColor: z.string().optional(), // Made optional as per some strategy docs implying it might not be strictly required everywhere, but good to have.

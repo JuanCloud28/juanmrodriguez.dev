@@ -16,7 +16,7 @@ const { title, cover, coverAlt, stack } = project.data;
       {project.data.heroVideo ? (
         <video 
           src={project.data.heroVideo}
-          poster={cover}
+          poster={project.data.coverMobile || cover}
           autoplay
           loop
           muted
@@ -25,12 +25,15 @@ const { title, cover, coverAlt, stack } = project.data;
           class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-focus-visible:scale-105"
         />
       ) : (
-        <img 
-          src={cover} 
-          alt={coverAlt}
-          class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-focus-visible:scale-105"
-          loading="lazy"
-        />
+        <picture class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 group-focus-visible:scale-105 block">
+            {project.data.coverMobile && <source media="(max-width: 768px)" srcset={project.data.coverMobile} />}
+            <img 
+              src={cover} 
+              alt={coverAlt}
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+        </picture>
       )}
       <!-- Overlay for hover state -->
       <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
