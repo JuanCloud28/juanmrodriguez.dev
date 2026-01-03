@@ -22,20 +22,19 @@ const featuredWork = allWork
   <section id="hero" class="relative w-full min-h-screen flex items-center px-6 md:px-12 pt-20 overflow-hidden">
     <div class="relative z-10 max-w-5xl">
       
-      <!-- Availability Pill -->
-      <div class="overflow-hidden mb-8">
-        <a href="#contact" class="availability-pill inline-flex items-center gap-2 py-1 px-3 border border-zinc-200 rounded-full bg-white/80 backdrop-blur-sm text-xs font-sans font-medium text-zinc-600 tracking-wide opacity-0 translate-y-4 cursor-pointer hover:border-zinc-300 transition-colors">
-          <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-          Booking Q1 2026 projects
-        </a>
-      </div>
+        <div class="overflow-hidden mb-8">
+          <a href="#contact" class="availability-pill inline-flex items-center gap-2 py-1 px-3 border border-zinc-200 rounded-full bg-white/80 backdrop-blur-sm text-xs font-sans font-medium text-zinc-600 tracking-wide opacity-0 translate-y-4 cursor-pointer hover:border-zinc-300 transition-colors">
+            <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+            Booking Q1 2026 projects
+          </a>
+        </div>
 
-      <!-- Headline -->
-      <h1 class="font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.9] tracking-tighter text-[#111111] mb-8">
-        <div class="overflow-hidden"><span class="reveal-text block">ADVICE, DESIGN,</span></div>
-        <div class="overflow-hidden"><span class="reveal-text block">DELIVERY.</span></div>
-        <div class="overflow-hidden"><span class="reveal-text block text-zinc-400">FROM ADELAIDE.</span></div>
-      </h1>
+        <!-- Headline -->
+        <h1 class="font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.9] tracking-tighter text-[#111111] mb-8">
+          <div class="overflow-hidden"><span class="reveal-text block">ADVICE, DESIGN,</span></div>
+          <div class="overflow-hidden"><span class="reveal-text block">DELIVERY.</span></div>
+          <div class="overflow-hidden"><span class="reveal-text block text-zinc-500">FROM ADELAIDE.</span></div>
+        </h1>
 
       <!-- Subheadline -->
       <div class="overflow-hidden mb-10">
@@ -97,7 +96,7 @@ const featuredWork = allWork
           "White label delivery and handoff"
         ].map((capability, index) => (
           <div class="capability-item border-t border-zinc-200 pt-6 opacity-0 translate-y-8">
-            <span class="text-xs text-zinc-400 mb-2 block font-mono">0{index + 1}</span>
+            <span class="text-xs text-zinc-500 mb-2 block font-mono">0{index + 1}</span>
             <p class="text-xl md:text-2xl font-display font-medium text-zinc-800">{capability}</p>
           </div>
         ))}
@@ -140,7 +139,7 @@ const featuredWork = allWork
         <div class="engagement-card p-8 border border-zinc-900 bg-zinc-900 text-white opacity-0 translate-y-8 scale-105 shadow-xl">
             <h3 class="font-display text-2xl font-bold mb-2">Fixed Scope</h3>
             <div class="text-3xl font-sans font-medium mb-4">Project Based</div>
-            <p class="text-zinc-400 text-sm">Clear deliverables and timeline. Best for full sites.</p>
+            <p class="text-zinc-300 text-sm">Clear deliverables and timeline. Best for full sites.</p>
         </div>
         <div class="engagement-card p-8 border border-zinc-200 bg-white opacity-0 translate-y-8">
             <h3 class="font-display text-2xl font-bold mb-2">Sprint Support</h3>
@@ -148,7 +147,7 @@ const featuredWork = allWork
             <p class="text-zinc-600 text-sm">Dedicated overflow capacity for crunch time.</p>
         </div>
       </div>
-      <p class="mt-8 text-center text-zinc-400 text-sm">Remote friendly • Adelaide Timezone (ACST)</p>
+      <p class="mt-8 text-center text-zinc-500 text-sm">Remote friendly • Adelaide Timezone (ACST)</p>
     </div>
   </section>
 
@@ -201,7 +200,7 @@ const featuredWork = allWork
         <a href="https://github.com/JuanCloud28" target="_blank" class="hover:text-zinc-900 transition-colors">GitHub</a>
         <a href="mailto:contact@juanmrodriguez.dev" class="hover:text-zinc-900 transition-colors">Email</a>
       </div>
-      <div class="text-xs text-zinc-400">Adelaide, AU • Built for delivery.</div>
+      <div class="text-xs text-zinc-500">Adelaide, AU • Built for delivery.</div>
     </div>
   </footer>
 
@@ -213,74 +212,79 @@ const featuredWork = allWork
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // 1. HERO ANIMATION TIMELINE
-  const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+  // Defer animation init to reduce main thread blocking during parsing
+  document.addEventListener("DOMContentLoaded", () => {
+    
+      // 1. HERO ANIMATION TIMELINE
+      const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-  // Initial delay to ensure page is rendered
-  heroTl.to(".availability-pill", { 
-    y: 0, 
-    opacity: 1, 
-    duration: 0.8 
-  }, "+=0.2")
-  .to(".reveal-text", {
-    y: 0,
-    opacity: 1,
-    duration: 1,
-    stagger: 0.15,
-    ease: "power4.out"
-  }, "-=0.4")
-  .to(".hero-sub", {
-    y: 0,
-    opacity: 1,
-    duration: 0.8
-  }, "-=0.6")
-  .to(".hero-cta", {
-    y: 0,
-    opacity: 1,
-    duration: 0.8
-  }, "-=0.6");
+      // Initial delay to ensure page is rendered
+      heroTl.to(".availability-pill", { 
+        y: 0, 
+        opacity: 1, 
+        duration: 0.8 
+      }, "+=0.2")
+      .to(".reveal-text", {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        stagger: 0.15,
+        ease: "power4.out"
+      }, "-=0.4")
+      .to(".hero-sub", {
+        y: 0,
+        opacity: 1,
+        duration: 0.8
+      }, "-=0.6")
+      .to(".hero-cta", {
+        y: 0,
+        opacity: 1,
+        duration: 0.8
+      }, "-=0.6");
 
-  // 2. SCROLL TRIGGERS FOR SECTIONS
-  
-  // Generic fade up helper
-  const fadeUp = (selector: string, trigger?: string, stagger: number = 0) => {
-    // Force set initial state in case CSS didn't catch it
-    gsap.set(selector, { y: 32, opacity: 0 }); 
+      // 2. SCROLL TRIGGERS FOR SECTIONS
+      
+      // Generic fade up helper
+      const fadeUp = (selector: string, trigger?: string, stagger: number = 0) => {
+        // Force set initial state in case CSS didn't catch it
+        gsap.set(selector, { y: 32, opacity: 0 }); 
 
-    gsap.to(selector, {
-      y: 0,
-      opacity: 1,
-      duration: 0.8,
-      stagger: stagger,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: trigger || selector,
-        start: "top 85%",
-        toggleActions: "play none none reverse"
+        gsap.to(selector, {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: stagger,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: trigger || selector,
+            start: "top 85%",
+            toggleActions: "play none none reverse"
+          }
+        });
+      };
+
+      // Optimization: Batch specific queries
+      const sections = gsap.utils.toArray('.section-title');
+      if (sections.length) {
+          sections.forEach((title: any) => fadeUp(title));
       }
-    });
-  };
 
-  // Section Titles
-  gsap.utils.toArray('.section-title').forEach((title: any) => {
-    fadeUp(title);
+      // Selected Work
+      fadeUp(".work-card-wrapper", "#selected-work", 0.2);
+
+      // Capabilities
+      fadeUp(".capability-item", "#capabilities", 0.1);
+
+      // Process Steps
+      fadeUp(".process-step", "#process", 0.15);
+
+      // Engagement Cards
+      fadeUp(".engagement-card", "#engagement", 0.2);
+
+      // About & Contact
+      fadeUp(".about-block", "#contact");
+      fadeUp(".contact-block", "#contact", 0.2);
   });
-
-  // Selected Work
-  fadeUp(".work-card-wrapper", "#selected-work", 0.2);
-
-  // Capabilities
-  fadeUp(".capability-item", "#capabilities", 0.1);
-
-  // Process Steps
-  fadeUp(".process-step", "#process", 0.15);
-
-  // Engagement Cards
-  fadeUp(".engagement-card", "#engagement", 0.2);
-
-  // About & Contact
-  fadeUp(".about-block", "#contact");
-  fadeUp(".contact-block", "#contact", 0.2);
 
   // 3. CONTACT FORM HANDLING
   const form = document.getElementById("contact-form") as HTMLFormElement;
