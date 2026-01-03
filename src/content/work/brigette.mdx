@@ -8,11 +8,11 @@ coverAlt: "Brigette Real Estate Property Dashboard"
 accentColor: "#2C3E50"
 role: "Full Stack Engineer"
 engagement: "Contract"
-team: "Solo"
+team: "Small Agile Team"
 nda: false
 stack:
   frontend: ["WordPress", "PHP", "JavaScript"]
-  backend: ["Python", "REAXML", "MySQL", "AWS (Linux)"]
+  backend: ["Python", "REAXML", "MySQL", "PostgreSQL", "AWS (Linux)"]
 tags: ["Real Estate", "Data Engineering", "Backend"]
 responsibilities:
   - "ETL Pipeline Architecture"
@@ -22,36 +22,32 @@ results:
   - "Automated daily data sync from legacy CRM"
   - "Custom brand interface decoupled from restrictive platform"
   - "Zero-maintenance data pipeline"
-liveUrl: "https://birgette.co.au"
+liveUrl: "https://brigette.com.au"
 isFeatured: true
 ---
 
 ## Overview
-Brigette Real Estate needed to break away from the generic, template-based websites provided by their CRM (**AgentBox**), which lacked brand identity. They wanted a bespoke digital presence but were limited by how data was exported.
+Brigette Real Estate required a bespoke digital presence distinct from the generic templates provided by their CRM, **AgentBox**. The primary goal was to establish a unique brand identity while navigating significant technical limitations in data export capabilities.
 
 ## Challenge
-We received about 10 massive bulk files daily via FTP. The engineering challenge wasn't just parsing XML; it was **Data Integrity**. Records had to be processed in strict chronological order to correctly distinguish between new listings and updates to existing ones, ensuring no stale data overwrote the latest information.
+The project involved processing large bulk files received daily via FTP. Beyond simple XML parsing, the core engineering challenge was maintaining strict **Data Integrity**. Records required processing in precise chronological order to accurately distinguish between new listings and updates, ensuring that stale data never overwrote the latest information.
 
 ## Constraints
-- **Legacy Feed**: Data provided only via bulk XML dumps (REAXML).
-- **Timing**: Updates had to be processed within minutes of receipt.
-- **Budget**: Solution needed to be serverless or low-cost maintenance.
+We worked with a **Legacy Feed** provided solely via bulk REAXML dumps. Updates needed to be processed within minutes of receipt, all while adhering to a budget that demanded a low-maintenance, cost-effective infrastructure.
 
 ## Solution
-I architected a robust backend solution on **AWS (Linux)** to bridge the gap between their CRM and their custom brand:
+I architected a robust backend solution on **AWS (Linux)** to bridge the gap between their CRM and custom frontend.
 
-1.  **Chronological Stream Processing:** A custom Python script ingests the daily XML dumps, sorting them by timestamp to strictly respect the sequence of events.
-2.  **Smart Upsert Logic:** The system evaluates every record—inserting new listings or carefully updating specific fields in existing ones only when valid changes occur.
-3.  **Brand Independence:** By centralizing this data in our own SQL database, we detached the frontend from the CRM's limitations, allowing for a fully custom, high-end user interface.
+The system uses a custom Python script to ingest and sort daily XML dumps by timestamp, strictly respecting the **Chronological Stream Processing**. Through **Smart Upsert Logic**, it evaluates every record to insert new listings or update specific fields only when valid changes occur. By centralizing this data in our own SQL database, we successfully decoupled the frontend from the CRM's limitations, enabling a fully custom, **Brand Independent** interface.
 
 ## Highlights
-- Decoupled frontend from legacy CRM constraints.
-- Robust error handling for malformed XML feeds.
+- Decoupled frontend from legacy CRM constraints
+- Robust error handling for malformed XML feeds
 
 ## Results
-- Enabled the agency to own their brand identity.
-- Reliable data bridge processing thousands of records daily.
+- Enabled the agency to fully own their brand identity
+- Reliable data bridge processing thousands of records daily
 
 ## Next improvements
-- Migration to a serverless architecture (AWS Lambda) for better scalability.
-- Implementation of real-time webhooks if the CRM supports them in future.
+- Migration to a serverless architecture (AWS Lambda) for better scalability
+- Implementation of real-time webhooks pending CRM support
