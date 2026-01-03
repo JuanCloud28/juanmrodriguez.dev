@@ -32,7 +32,7 @@ try {
     throw e;
 }
 
-const { title, client, publishDate, cover, coverAlt, role, engagement, team, stack, liveUrl, tags, heroVideo } = entry.data;
+const { title, client, publishDate, cover, coverMobile, coverAlt, role, engagement, team, stack, liveUrl, tags, heroVideo } = entry.data;
 
 const formattedDate = publishDate ? publishDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : 'Date Unknown';
 const year = formattedDate.split(' ')[1] || formattedDate;
@@ -87,15 +87,19 @@ const year = formattedDate.split(' ')[1] || formattedDate;
         {heroVideo ? (
             <video
                 src={heroVideo}
-                poster={cover}
+                poster={coverMobile || cover}
                 autoplay
                 loop
                 muted
                 playsinline
+                preload="metadata"
                 class="w-full h-full object-cover"
             />
         ) : (
-            <img src={cover} alt={coverAlt} class="w-full h-full object-cover" />
+            <picture class="w-full h-full object-cover block">
+                {coverMobile && <source media="(max-width: 768px)" srcset={coverMobile} />}
+                <img src={cover} alt={coverAlt} class="w-full h-full object-cover" />
+            </picture>
         )}
     </div>
 
