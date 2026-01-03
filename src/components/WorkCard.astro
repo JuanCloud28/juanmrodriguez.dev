@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { title, cover, coverAlt, technicalChallenge, tags, stack } = project.data;
+const { title, cover, coverAlt, stack } = project.data;
 ---
 
 <a href={`/work/${project.slug}`} class="group block w-full outline-none">
@@ -44,10 +44,6 @@ const { title, cover, coverAlt, technicalChallenge, tags, stack } = project.data
         </h3>
         <!-- Optional: Year or Status -->
       </div>
-
-      <p class="font-sans text-zinc-500 text-base md:text-lg leading-relaxed max-w-2xl">
-        {technicalChallenge}
-      </p>
 
       <!-- Tags -->
       <div class="flex flex-wrap gap-2 mt-2">
