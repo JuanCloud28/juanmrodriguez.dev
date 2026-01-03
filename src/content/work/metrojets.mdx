@@ -1,0 +1,57 @@
+---
+title: "Metrojets Sports Club"
+client: "Metrojets"
+publishDate: 2025-12-15
+cover: "/assets/metrojets-cover.jpg"
+heroVideo: "/assets/mj-website-tour.mp4"
+coverAlt: "Metrojets animated landing page on a laptop screen"
+accentColor: "#E04F39"
+role: "Frontend Developer"
+engagement: "Direct"
+team: "Solo"
+nda: false
+stack:
+  frontend: ["JavaScript (ES6+)", "GSAP", "CSS Injection", "GoHighLevel"]
+  tooling: ["Vite", "Babel"]
+tags: ["GSAP", "Frontend", "SaaS Override"]
+responsibilities:
+  - "DOM Injection Strategy"
+  - "Animation System Implementation"
+  - "Platform Override & Custom Styling"
+results:
+  - "Award-winning visual feel on a restrictive platform"
+  - "Seamless integration of custom GSAP animations"
+  - "High client satisfaction with unique brand expression"
+liveUrl: "https://metrojets.com.au" 
+isFeatured: true
+---
+
+## Overview
+**GoHighLevel (GHL)** is a powerful CRM, but its website builder is notoriously rigid. The client needed the automation features of GHL but refused to settle for a generic, static template. They wanted a "high-end" feel with smooth transitions and interactivity.
+
+## Challenge
+The platform natively blocks custom access to the DOM structure, making standard animation libraries impossible to use out of the box. The challenge was to inject premium motion without breaking the platform's core functionality or drag-and-drop features.
+
+## Constraints
+- **Restricted Environment**: No direct access to server-side code.
+- **Dynamic Rendering**: Elements are hydrated client-side, making standard load events unreliable.
+- **Sanitization**: Platform strips many standard script tags.
+
+## Solution
+I treated the SaaS builder merely as a content host and overrode its rendering engine using client-side JavaScript:
+
+1.  **Script Injection:** I developed a custom script loader that bypasses GHL's sanitizer to inject **GSAP** core libraries.
+2.  **Observer Pattern:** Since GHL uses hydration to render elements, standard `window.onload` events fail. I implemented `MutationObservers` to watch the DOM and attach animations only when the targeted elements were fully painted.
+3.  **Scoped CSS Override:** I wrote a CSS layer that forcefully resets the builder's default styles, giving me a clean canvas to apply the brand's custom typography and layout rules.
+
+## Highlights
+- Successful bypass of platform limitations to deliver premium UI.
+- Custom entry animations that feel native to the site.
+
+## Results
+- "I turned a restrictive drag-and-drop builder into a canvas for award-winning interactions."
+- Proved that platform limitations are just an engineering challenge to be solved.
+
+## Next improvements
+- Abstract the injection script into a reusable library for other GHL projects.
+- Optimize asset loading for even faster TTI.

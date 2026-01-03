@@ -1,1 +1,11 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: "Satoshi", sans-serif;
+  --font-display: "Clash Display", sans-serif;
+}
+
+html, body {
+    @apply bg-[#FAFAFA] text-[#111111];
+}
