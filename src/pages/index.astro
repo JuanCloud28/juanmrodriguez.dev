@@ -147,7 +147,9 @@ const featuredWork = allWork
             <p class="text-zinc-600 text-sm">Dedicated overflow capacity for crunch time.</p>
         </div>
       </div>
-      <p class="mt-8 text-center text-zinc-500 text-sm">Remote friendly • Adelaide Timezone (ACST)</p>
+      <p class="mt-8 text-center text-zinc-500 text-sm">
+        Remote friendly • Adelaide, Australia <span id="adelaide-time" class="tabular-nums opacity-80"></span>
+      </p>
     </div>
   </section>
 
@@ -286,7 +288,24 @@ const featuredWork = allWork
       fadeUp(".contact-block", "#contact", 0.2);
   });
 
-  // 3. CONTACT FORM HANDLING
+  // 3. ADELAIDE TIME ZONE
+  const updateTime = () => {
+    const timeElement = document.getElementById('adelaide-time');
+    if (!timeElement) return;
+
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Australia/Adelaide',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
+
+    timeElement.textContent = `(${formatter.format(new Date())})`;
+  };
+
+  updateTime();
+  setInterval(updateTime, 60000);
+  // 4. CONTACT FORM HANDLING
   const form = document.getElementById("contact-form") as HTMLFormElement;
   const statusDiv = document.getElementById("form-status");
   const submitButton = form?.querySelector("button[type='submit']") as HTMLButtonElement;
