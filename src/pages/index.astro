@@ -147,7 +147,9 @@ const featuredWork = allWork
             <p class="text-zinc-600 text-sm">Dedicated overflow capacity for crunch time.</p>
         </div>
       </div>
-      <p class="mt-8 text-center text-zinc-500 text-sm">Remote friendly • Adelaide Timezone (ACST)</p>
+      <p class="mt-8 text-center text-zinc-500 text-sm">
+        Remote friendly • Adelaide, Australia <span id="adelaide-time" class="tabular-nums opacity-80"></span>
+      </p>
     </div>
   </section>
 
@@ -198,7 +200,16 @@ const featuredWork = allWork
       <div class="flex gap-6 text-sm text-zinc-500">
         <a href="https://www.linkedin.com/in/jmrf/" target="_blank" class="hover:text-zinc-900 transition-colors">LinkedIn</a>
         <a href="https://github.com/JuanCloud28" target="_blank" class="hover:text-zinc-900 transition-colors">GitHub</a>
-        <a href="mailto:contact@juanmrodriguez.dev" class="hover:text-zinc-900 transition-colors">Email</a>
+        <div class="relative group">
+          <a href="mailto:contact@juanmrodriguez.dev" class="hover:text-zinc-900 transition-colors">Email</a>
+          <button id="copy-email" class="absolute -right-8 md:-right-6 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-zinc-900 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all cursor-pointer" aria-label="Copy email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+          <div id="copy-feedback" class="absolute -top-8 left-1/2 -translate-x-1/2 bg-zinc-900 text-white text-[10px] px-2 py-1 rounded opacity-0 pointer-events-none transition-opacity">Copied!</div>
+        </div>
       </div>
       <div class="text-xs text-zinc-500">Adelaide, AU • Built for delivery.</div>
     </div>
@@ -286,7 +297,24 @@ const featuredWork = allWork
       fadeUp(".contact-block", "#contact", 0.2);
   });
 
-  // 3. CONTACT FORM HANDLING
+  // 3. ADELAIDE TIME ZONE
+  const updateTime = () => {
+    const timeElement = document.getElementById('adelaide-time');
+    if (!timeElement) return;
+
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Australia/Adelaide',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
+
+    timeElement.textContent = `(${formatter.format(new Date())})`;
+  };
+
+  updateTime();
+  setInterval(updateTime, 60000);
+  // 4. CONTACT FORM HANDLING
   const form = document.getElementById("contact-form") as HTMLFormElement;
   const statusDiv = document.getElementById("form-status");
   const submitButton = form?.querySelector("button[type='submit']") as HTMLButtonElement;
@@ -341,6 +369,43 @@ const featuredWork = allWork
       }
     });
   }
+  // 5. EMAIL COPY FUNCTIONALITY
+  document.addEventListener("DOMContentLoaded", () => {
+    const copyBtn = document.getElementById("copy-email");
+    const feedback = document.getElementById("copy-feedback");
+    
+    if (copyBtn && feedback) {
+      copyBtn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText("contact@juanmrodriguez.dev");
+          
+          // Show feedback
+          feedback.classList.remove("opacity-0");
+          setTimeout(() => {
+            feedback.classList.add("opacity-0");
+          }, 2000);
+        } catch (err) {
+          console.error("Failed to copy email:", err);
+          // Fallback for older browsers
+          const textArea = document.createElement("textarea");
+          textArea.value = "contact@juanmrodriguez.dev";
+          document.body.appendChild(textArea);
+          textArea.select();
+          try {
+            document.execCommand('copy');
+            feedback.classList.remove("opacity-0");
+            setTimeout(() => {
+              feedback.classList.add("opacity-0");
+            }, 2000);
+          } catch (e) {
+            console.error("Fallback copy failed", e);
+          }
+          document.body.removeChild(textArea);
+        }
+      });
+    }
+  });
+
 </script>
 
 <style>
